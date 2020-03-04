@@ -1,0 +1,24 @@
+{
+  "name": "cancan",
+  "version": "1.0.0",
+  "description": "TS canvas drawings",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/r47717/cancan.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/r47717/cancan/issues"
+  },
+  "homepage": "https://github.com/r47717/cancan#readme",
+  "dependencies": {
+    "typescript": "^3.8.3"
+  }
+}
