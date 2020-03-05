@@ -90,19 +90,18 @@ class Cancan {
         return this;
     }
 
-    public tour(
+    public go(
         x: number | 'center',
         y: number | 'center',
         pattern: string,
         options: {
             color?: string,
             thickness?: number,
-            delay?: number,
             measure?: boolean
         } = {}
     ): undefined | { minX: number, minY: number, maxX: number, maxY: number } {
 
-        const {color, thickness, delay, measure} = Object.assign({
+        const {color, thickness, measure} = Object.assign({
             color: "#000000",
             thickness: 1,
             measure: false
@@ -243,7 +242,7 @@ class Cancan {
     }
 
     public dim(pattern: string) {
-        const data: any = this.tour(0, 0, pattern, {measure: true});
+        const data: any = this.go(0, 0, pattern, {measure: true});
         data.dimX = data.maxX - data.minX;
         data.dimY = data.maxY - data.minY;
         return data;
@@ -310,13 +309,13 @@ AEBFCGDH(X)
 `;
 
 const P = p + `(20.)` + p + `(20.)` + p + `(40-20|)` + p + `(20.)` + p + `(20.)` + p + `(40-20|)` + p + `(20.)` + p + `(20.)` + p;
-cancan.tour('center', 'center', P);
+cancan.go('center', 'center', P);
 
 // demo 2
 // cancan.background();
 // const pattern = `78.25|15-10|15.1|16-12/15.23/38-15|1-15/37-23|15.12|16-1/15.10/15-25/`;
-// cancan.tour(10, 10, pattern, {color: "#ffffff"});
-// cancan.tour(10, cancan.HH - 10, Cancan.mirrorY(pattern), {color: "#ffffff"});
+// cancan.go(10, 10, pattern, {color: "#ffffff"});
+// cancan.go(10, cancan.HH - 10, Cancan.mirrorY(pattern), {color: "#ffffff"});
 // cancan.circle(cancan.WW / 2, cancan.HH / 2, 30);
 
 // demo 1
