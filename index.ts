@@ -90,8 +90,19 @@ class Cancan {
         return this;
     }
 
-    public tour(x: number, y: number, pattern: string, color: string = "#000000", thickness: number = 1, measure: boolean = false):
+    public tour(x: number | 'center', y: number | 'center', pattern: string, color: string = "#000000", thickness: number = 1, measure: boolean = false):
         undefined | { minX: number, minY: number, maxX: number, maxY: number } {
+
+        if (x === 'center' || y === 'center') {
+            const dim = this.dim(pattern);
+            if (x === 'center') {
+                x = (this.WW - dim.dimX) / 2 - dim.minX;
+            }
+            if (y === 'center') {
+                y = (this.WW - dim.dimY) / 2 - dim.minY;
+            }
+        }
+
         const dx = this._tourStepX;
         const dy = this._tourStepY;
         const originalX = x;
@@ -266,7 +277,6 @@ class Cancan {
 
 const cancan = new Cancan(canvasEl as HTMLCanvasElement);
 
-// demo 3
 const p1 = `x10.a`;
 const p2 = `X10|b`;
 const p3 = `X10-c`;
@@ -278,17 +288,32 @@ const p8 = `X[7.7/]h`;
 const p9 = `AEBFCGDHX`;
 const p = p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9;
 console.log(p);
-cancan.tour(150, 150, p);
-cancan.tour(350, 150, p);
-cancan.tour(550, 150, p);
-cancan.tour(150, 350, p);
-cancan.tour(350, 350, p);
-cancan.tour(550, 350, p);
-cancan.tour(150, 550, p);
-cancan.tour(350, 550, p);
-cancan.tour(550, 550, p);
+cancan.tour('center', 'center', p);
 
-console.log(cancan.dim(`20.30|40/50-`));
+
+// demo 3
+// const p1 = `x10.a`;
+// const p2 = `X10|b`;
+// const p3 = `X10-c`;
+// const p4 = `X10/d`;
+// const p5 = `X[7.7|]e`;
+// const p6 = `X[7-7|]f`;
+// const p7 = `X[7-7/]g`;
+// const p8 = `X[7.7/]h`;
+// const p9 = `AEBFCGDHX`;
+// const p = p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9;
+// console.log(p);
+// cancan.tour(150, 150, p);
+// cancan.tour(350, 150, p);
+// cancan.tour(550, 150, p);
+// cancan.tour(150, 350, p);
+// cancan.tour(350, 350, p);
+// cancan.tour(550, 350, p);
+// cancan.tour(150, 550, p);
+// cancan.tour(350, 550, p);
+// cancan.tour(550, 550, p);
+//
+// console.log(cancan.dim(`20.30|40/50-`));
 
 
 // demo 2
