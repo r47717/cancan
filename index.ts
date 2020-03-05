@@ -29,6 +29,26 @@ class Cancan {
         this.ctx = this.elem.getContext("2d")!;
     }
 
+    public topLeft(): { x: number, y: number } {
+        return {x: 0, y: 0};
+    }
+
+    public topRight(): { x: number, y: number } {
+        return {x: this.WW, y: 0};
+    }
+
+    public bottomLeft(): { x: number, y: number } {
+        return {x: this.HH, y: 0};
+    }
+
+    public bottomRight(): { x: number, y: number } {
+        return {x: this.WW, y: this.HH};
+    }
+
+    public center(): { x: number, y: number } {
+        return {x: this.WW / 2, y: this.HH / 2};
+    }
+
     public background(color: string = "#000000") {
         this.ctx.fillStyle = color;
         this.ctx.fillRect(0, 0, this.WW, this.HH);
@@ -70,11 +90,28 @@ class Cancan {
         return this;
     }
 
-    public tour(x: number, y: number, pattern: string, color: string = "#000000", thickness: number = 1) {
+    public tour(x: number, y: number, pattern: string, color: string = "#000000", thickness: number = 1, measure: boolean = false):
+        undefined | { minX: number, minY: number, maxX: number, maxY: number } {
         const dx = this._tourStepX;
         const dy = this._tourStepY;
         const originalX = x;
         const originalY = y;
+        let minX = x;
+        let maxX = x;
+        let minY = y;
+        let maxY = y;
+
+        const setX = (newX: number) => {
+            if (newX > maxX) maxX = newX;
+            if (newX < minX) minX = newX;
+            x = newX;
+        };
+
+        const setY = (newY: number) => {
+            if (newY > maxY) maxY = newY;
+            if (newY < minY) minY = newY;
+            y = newY;
+        };
 
         this.ctx.strokeStyle = color;
         this.ctx.lineWidth = thickness;
@@ -90,7 +127,7 @@ class Cancan {
         let captureX: number = 0;
         let captureY: number = 0;
 
-        let points: Map<string, { x: number, y: number }> = new Map<string, {x: number, y: number}>();
+        let points: Map<string, { x: number, y: number }> = new Map<string, { x: number, y: number }>();
 
         for (const ch of pattern) {
             if ([' ', '\t', '\r', '\n'].includes(ch)) {
@@ -123,7 +160,7 @@ class Cancan {
             if (ch === ']') {
                 capture = false;
                 this.ctx.moveTo(captureX, captureY);
-                this.ctx.lineTo(x, y);
+                measure ? this.ctx.moveTo(x, y) : this.ctx.lineTo(x, y);
                 continue;
             }
             if (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
@@ -136,16 +173,16 @@ class Cancan {
             } else {
                 switch (ch) {
                     case '.':
-                        x += dx * multiply();
+                        setX(x + dx * multiply());
                         break;
                     case '-':
-                        x -= dx * multiply();
+                        setX(x - dx * multiply());
                         break;
                     case '|':
-                        y += dy * multiply();
+                        setY(y + dy * multiply());
                         break;
                     case '/':
-                        y -= dy * multiply();
+                        setY(y - dy * multiply());
                         break;
                     case '@':
                         x = originalX;
@@ -157,7 +194,7 @@ class Cancan {
             }
             multi = false;
             multiFactor = 0;
-            if (blank || capture) {
+            if (blank || capture || measure) {
                 this.ctx.moveTo(x, y);
             } else {
                 this.ctx.lineTo(x, y);
@@ -165,6 +202,21 @@ class Cancan {
         }
 
         this.ctx.stroke();
+
+        if (measure) {
+            return {
+                minX, maxX, minY, maxY
+            }
+        }
+
+        return undefined;
+    }
+
+    public dim(pattern: string) {
+        const data: any = this.tour(0, 0, pattern, "#000000", 1, true)!;
+        data.dimX = data.maxX - data.minX;
+        data.dimY = data.maxY - data.minY;
+        return data;
     }
 
     public static mirrorX(pattern: string) {
@@ -195,8 +247,13 @@ class Cancan {
             .replace(/&/g, '/')
     }
 
-    public static turn2(pattern: string) { return this.turn(this.turn(pattern)); };
-    public static turn3(pattern: string) { return this.turn(this.turn(this.turn(pattern))); };
+    public static turn2(pattern: string) {
+        return this.turn(this.turn(pattern));
+    };
+
+    public static turn3(pattern: string) {
+        return this.turn(this.turn(this.turn(pattern)));
+    };
 
     public circle(x: number, y: number, r: number, color: string = "#FFFFFF", thickness: number = 1) {
         this.ctx.strokeStyle = color;
@@ -208,8 +265,31 @@ class Cancan {
 }
 
 const cancan = new Cancan(canvasEl as HTMLCanvasElement);
-const p = `a10.[5.5|]10|[5|5-]10-[5/5-]10/[A]`;
-cancan.tour(150, 100, p);
+
+// demo 3
+const p1 = `x10.a`;
+const p2 = `X10|b`;
+const p3 = `X10-c`;
+const p4 = `X10/d`;
+const p5 = `X[7.7|]e`;
+const p6 = `X[7-7|]f`;
+const p7 = `X[7-7/]g`;
+const p8 = `X[7.7/]h`;
+const p9 = `AEBFCGDHX`;
+const p = p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9;
+console.log(p);
+cancan.tour(150, 150, p);
+cancan.tour(350, 150, p);
+cancan.tour(550, 150, p);
+cancan.tour(150, 350, p);
+cancan.tour(350, 350, p);
+cancan.tour(550, 350, p);
+cancan.tour(150, 550, p);
+cancan.tour(350, 550, p);
+cancan.tour(550, 550, p);
+
+console.log(cancan.dim(`20.30|40/50-`));
+
 
 // demo 2
 // cancan.background();
