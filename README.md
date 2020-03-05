@@ -52,3 +52,4 @@ Cancan.mirrorX(pattern) - mirrors pattern horizontally
 Cancan.mirrorY(pattern) - mirrors pattern vertically
 
 ```
+![Demo](cancan.png)
