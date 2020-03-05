@@ -90,8 +90,23 @@ class Cancan {
         return this;
     }
 
-    public tour(x: number | 'center', y: number | 'center', pattern: string, color: string = "#000000", thickness: number = 1, measure: boolean = false):
-        undefined | { minX: number, minY: number, maxX: number, maxY: number } {
+    public tour(
+        x: number | 'center',
+        y: number | 'center',
+        pattern: string,
+        options: {
+            color?: string,
+            thickness?: number,
+            delay?: number,
+            measure?: boolean
+        } = {}
+    ): undefined | { minX: number, minY: number, maxX: number, maxY: number } {
+
+        const {color, thickness, delay, measure} = Object.assign({
+            color: "#000000",
+            thickness: 1,
+            measure: false
+        }, options);
 
         if (x === 'center' || y === 'center') {
             const dim = this.dim(pattern);
@@ -171,7 +186,11 @@ class Cancan {
             if (ch === ']') {
                 capture = false;
                 this.ctx.moveTo(captureX, captureY);
-                measure ? this.ctx.moveTo(x, y) : this.ctx.lineTo(x, y);
+                if (measure) {
+                    this.ctx.moveTo(x, y)
+                } else {
+                    this.ctx.lineTo(x, y);
+                }
                 continue;
             }
             if (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
@@ -210,8 +229,8 @@ class Cancan {
             } else {
                 this.ctx.lineTo(x, y);
             }
-        }
 
+        }
         this.ctx.stroke();
 
         if (measure) {
@@ -224,7 +243,7 @@ class Cancan {
     }
 
     public dim(pattern: string) {
-        const data: any = this.tour(0, 0, pattern, "#000000", 1, true)!;
+        const data: any = this.tour(0, 0, pattern, {measure: true});
         data.dimX = data.maxX - data.minX;
         data.dimY = data.maxY - data.minY;
         return data;
@@ -277,50 +296,27 @@ class Cancan {
 
 const cancan = new Cancan(canvasEl as HTMLCanvasElement);
 
-const p1 = `x10.a`;
-const p2 = `X10|b`;
-const p3 = `X10-c`;
-const p4 = `X10/d`;
-const p5 = `X[7.7|]e`;
-const p6 = `X[7-7|]f`;
-const p7 = `X[7-7/]g`;
-const p8 = `X[7.7/]h`;
-const p9 = `AEBFCGDHX`;
-const p = p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9;
-console.log(p);
-cancan.tour('center', 'center', p);
-
-
 // demo 3
-// const p1 = `x10.a`;
-// const p2 = `X10|b`;
-// const p3 = `X10-c`;
-// const p4 = `X10/d`;
-// const p5 = `X[7.7|]e`;
-// const p6 = `X[7-7|]f`;
-// const p7 = `X[7-7/]g`;
-// const p8 = `X[7.7/]h`;
-// const p9 = `AEBFCGDHX`;
-// const p = p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9;
-// console.log(p);
-// cancan.tour(150, 150, p);
-// cancan.tour(350, 150, p);
-// cancan.tour(550, 150, p);
-// cancan.tour(150, 350, p);
-// cancan.tour(350, 350, p);
-// cancan.tour(550, 350, p);
-// cancan.tour(150, 550, p);
-// cancan.tour(350, 550, p);
-// cancan.tour(550, 550, p);
-//
-// console.log(cancan.dim(`20.30|40/50-`));
+const p = `x
+10.a
+(X)10|b
+(X)10-c
+(X)10/d
+(X)[7.7|]e
+(X)[7-7|]f
+(X)[7-7/]g
+(X)[7.7/]h
+AEBFCGDH(X)
+`;
 
+const P = p + `(20.)` + p + `(20.)` + p + `(40-20|)` + p + `(20.)` + p + `(20.)` + p + `(40-20|)` + p + `(20.)` + p + `(20.)` + p;
+cancan.tour('center', 'center', P);
 
 // demo 2
 // cancan.background();
 // const pattern = `78.25|15-10|15.1|16-12/15.23/38-15|1-15/37-23|15.12|16-1/15.10/15-25/`;
-// cancan.tour(10, 10, pattern, "#ffffff");
-// cancan.tour(10, cancan.HH - 10, Cancan.mirrorY(pattern), "#ffffff");
+// cancan.tour(10, 10, pattern, {color: "#ffffff"});
+// cancan.tour(10, cancan.HH - 10, Cancan.mirrorY(pattern), {color: "#ffffff"});
 // cancan.circle(cancan.WW / 2, cancan.HH / 2, 30);
 
 // demo 1
