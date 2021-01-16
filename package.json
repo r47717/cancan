@@ -1,7 +1,7 @@
 {
-  "name": "cancan",
-  "version": "1.0.0",
-  "description": "TS canvas drawings",
+  "name": "canvas-patterns",
+  "version": "1.0.1",
+  "description": "TS canvas patterns drawing",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
@@ -12,8 +12,8 @@
     "url": "git+https://github.com/r47717/cancan.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "r47717",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/r47717/cancan/issues"
   },

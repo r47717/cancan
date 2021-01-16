@@ -1,4 +1,5 @@
-# cancan
+# canvas-patterns (cancan)
+
 ## Simple pattern based canvas drawings
 
 ```
@@ -17,7 +18,7 @@ const cancan = new Cancan(canvasEl as HTMLCanvasElement);
 // (...) - pen moves w/o drawings
 // [...] - pen draws right to the final sequence point
 // `a4.5|10.20/A` - letter saves pen coorditates, corresponding upper case letter moves pen to the saved coordinates
-// (any English letter can be used 'a' to 'z') 
+// (any English letter can be used 'a' to 'z')
 
 // Step 3: run your pattern:
 cancan.go(100, 100, `3.3|3-3/`, opts); // square with 3 step sides (step is 10 pix by default)
@@ -52,4 +53,5 @@ Cancan.mirrorX(pattern) - mirrors pattern horizontally
 Cancan.mirrorY(pattern) - mirrors pattern vertically
 
 ```
+
 ![Demo](cancan.png)
