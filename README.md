@@ -1,4 +1,5 @@
 # canvas-patterns (cancan)
+https://www.npmjs.com/package/canvas-patterns
 
 ## Simple pattern based canvas drawings
 
